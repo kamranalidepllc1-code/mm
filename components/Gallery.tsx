@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import AutoVideo from "@/components/AutoVideo";
+import AutoVideo, { prepareForAutoplay } from "@/components/AutoVideo";
 import { categories, works, type Category } from "@/data/portfolio";
 
 const PER_PAGE = 8;
@@ -175,7 +175,20 @@ export default function Gallery() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="lightbox-backdrop" src={open.image} alt="" aria-hidden="true" />
               {open.videoHd || open.video ? (
-                <video src={open.videoHd || open.video} poster={open.image} autoPlay muted loop playsInline controls />
+                <video
+                  ref={(v) => {
+                    if (!v) return;
+                    prepareForAutoplay(v);
+                    v.play().catch(() => {});
+                  }}
+                  src={open.videoHd || open.video}
+                  poster={open.image}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={open.image} alt={open.title} />

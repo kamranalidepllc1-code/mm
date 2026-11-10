@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { HeroClip } from "@/data/portfolio";
+import { playWithFallback, prepareForAutoplay } from "@/components/AutoVideo";
 
 // Plays the hero clips one after another (e.g. Cutting → Stitching → Ready for the shoot)
 // with a cross-fade, a caption and a progress bar for each scene.
@@ -14,9 +15,10 @@ export default function HeroVideos({ clips }: { clips: HeroClip[] }) {
   useEffect(() => {
     refs.current.forEach((v, i) => {
       if (!v) return;
+      prepareForAutoplay(v);
       if (i === active) {
         v.currentTime = 0;
-        v.play().catch(() => {});
+        playWithFallback(v);
       } else {
         v.pause();
       }
